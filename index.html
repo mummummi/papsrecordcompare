@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PAPS 1·2학기 기록 비교</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6fb; --panel:#fff; --ink:#1e293b; --sub:#64748b; --line:#e2e8f0;
+  --up:#16a34a; --upbg:#dcfce7; --down:#e11d48; --downbg:#ffe4e6;
+  --same:#64748b; --samebg:#f1f5f9; --neu:#0891b2; --neubg:#cffafe; --new:#2563eb; --newbg:#dbeafe;
+  --accent:#ef6c3a; --s1:#94a3b8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;font-size:17px}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1440px;margin:0 auto;padding:18px 22px 60px}
+header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-family:'Jua',sans-serif;font-weight:400;font-size:34px;margin:0;letter-spacing:-.5px}
+h1 small{font-family:'Noto Sans KR';font-size:15px;color:var(--sub);font-weight:500;margin-left:8px}
+.spacer{flex:1}
+.tbtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 14px;font-size:15px;color:var(--ink)}
+.tbtn:hover{background:#f8fafc}
+.tbtn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.tabs{display:flex;gap:8px;background:#fff;padding:6px;border-radius:16px;border:1px solid var(--line)}
+.tab{border:0;background:transparent;padding:10px 20px;border-radius:12px;font-family:'Jua';font-size:24px;color:var(--sub)}
+.tab .n{font-family:'Noto Sans KR';font-size:13px;margin-left:4px}
+.tab.on{background:var(--accent);color:#fff}
+.seg{display:flex;background:#fff;border:1px solid var(--line);border-radius:12px;padding:4px}
+.seg button{border:0;background:transparent;padding:8px 16px;border-radius:9px;font-size:16px;font-weight:700;color:var(--sub)}
+.seg button.on{background:var(--ink);color:#fff}
+.chk{display:flex;align-items:center;gap:6px;font-size:15px;color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer;user-select:none}
+.banner{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:18px}
+.ptitle{font-family:'Jua';font-size:26px;margin:0 0 4px}
+.psub{color:var(--sub);font-size:15px;margin:0 0 14px}
+
+/* summary */
+.sumgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.sum{border:1px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;transition:.15s}
+.sum:hover{border-color:#cbd5e1;transform:translateY(-1px)}
+.sum.on{outline:3px solid var(--accent);border-color:transparent}
+.sum .area{font-family:'Jua';font-size:22px}
+.sum .test{font-size:13px;color:var(--sub)}
+.stack{display:flex;height:16px;border-radius:8px;overflow:hidden;background:#f1f5f9;margin:12px 0 8px}
+.stack span{display:block;height:100%}
+.counts{display:flex;gap:10px;font-size:14px;flex-wrap:wrap}
+.counts b{font-size:18px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
+
+/* chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 16px;font-size:16px;font-weight:700;color:var(--sub)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.legend{display:flex;gap:18px;align-items:center;flex-wrap:wrap;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.chart svg.db{width:100%;height:auto;display:block}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:#fff;cursor:pointer;transition:.15s}
+.card:hover{box-shadow:0 6px 20px rgba(15,23,42,.08);transform:translateY(-2px)}
+.chead{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.cname{font-family:'Jua';font-size:24px}
+.tag{font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--newbg);color:var(--new)}
+.ctot{margin-left:auto;font-size:13px;color:var(--sub);text-align:right;line-height:1.3}
+.ctot b{font-size:16px;color:var(--ink)}
+.mrow{display:grid;grid-template-columns:46px 1fr auto;align-items:center;gap:8px;padding:6px 0;border-top:1px dashed var(--line);font-size:15px}
+.mrow .ia{font-weight:700;color:var(--sub);font-size:14px}
+.mrow .vals{font-variant-numeric:tabular-nums}
+.mrow .vals .a{color:#334155;font-weight:500}
+.pill{font-size:14px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.st-up{color:var(--up);background:var(--upbg)} .st-down{color:var(--down);background:var(--downbg)}
+.st-same{color:var(--same);background:var(--samebg)} .st-neutral{color:var(--neu);background:var(--neubg)}
+.st-new{color:var(--new);background:var(--newbg)} .st-none{color:#94a3b8;background:#f8fafc}
+
+/* input */
+.tablewrap{overflow-x:auto}
+table.inp{border-collapse:collapse;width:100%;min-width:1150px;font-size:14px}
+table.inp th{background:#f8fafc;border:1px solid var(--line);padding:6px;font-weight:700}
+table.inp th.it{font-family:'Jua';font-size:18px;font-weight:400}
+table.inp td{border:1px solid var(--line);padding:4px;text-align:center;vertical-align:middle}
+table.inp input,table.inp select{width:100%;min-width:52px;border:1px solid #cbd5e1;border-radius:6px;padding:6px 4px;font-size:15px;text-align:center;font-family:inherit;background:#fff}
+table.inp input:focus,table.inp select:focus{outline:2px solid var(--accent);border-color:transparent}
+table.inp input.nm{text-align:left;min-width:90px;font-weight:700}
+table.inp tr.prev td{background:#fafbfc;color:var(--sub);font-size:12.5px;border-top:0;padding:3px}
+#gate{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#fff7ed,#eef2ff);z-index:100;padding:20px}
+.gbox{background:#fff;border-radius:24px;padding:32px 34px;width:min(380px,100%);box-shadow:0 20px 50px rgba(15,23,42,.12);display:flex;flex-direction:column;align-items:center;gap:10px}
+.gtitle{font-family:'Jua';font-size:30px}
+#gPw{width:100%;font-size:20px;padding:12px 14px;border:2px solid #cbd5e1;border-radius:12px;text-align:center;font-family:inherit}
+#gPw:focus{outline:none;border-color:var(--accent)}
+.gmsg{margin-top:14px;color:var(--down);font-weight:700;text-align:center;min-height:1.4em}
+.syncbox{background:#f0f9ff;border:1px solid #bae6fd;border-radius:14px;padding:14px 16px}
+.fld{display:block;font-size:14px;font-weight:700;margin:8px 0 0}
+.fld input{display:block;width:100%;margin-top:4px;border:1px solid #cbd5e1;border-radius:8px;padding:9px 10px;font-size:15px;font-family:inherit}
+.savehint{font-size:14px;color:var(--up);margin-left:8px;opacity:0;transition:.3s}
+.savehint.show{opacity:1}
+.rm{border:0;background:transparent;color:#94a3b8;font-size:13px;text-decoration:underline}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal.on{display:flex}
+.mbox{background:#fff;border-radius:22px;width:min(1100px,100%);max-height:94vh;overflow:auto;padding:24px 28px}
+.mhead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.mhead .cname{font-size:40px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.ditem{border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.ditem .t{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+.ditem .t .area{font-family:'Jua';font-size:24px}
+.ditem .t .test{font-size:13px;color:var(--sub)}
+.ditem .t .pill{margin-left:auto;font-size:17px}
+.brow{display:grid;grid-template-columns:52px 1fr;align-items:center;gap:8px;margin:6px 0;font-size:14px;color:var(--sub)}
+.btrack{background:#f1f5f9;border-radius:8px;height:34px;position:relative;overflow:hidden}
+.bfill{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:#fff;font-weight:900;font-size:17px;min-width:4px;transition:width .6s ease}
+.bfill.out{justify-content:flex-start}
+.bval{position:absolute;top:50%;transform:translateY(-50%);font-weight:900;font-size:17px;color:var(--ink)}
+.gchg{font-size:14px;color:var(--sub);margin-top:6px}
+.gchg b{color:var(--ink)}
+.note{font-size:12.5px;color:var(--sub);margin-top:4px}
+textarea{width:100%;min-height:220px;font-family:ui-monospace,monospace;font-size:12px;border:1px solid var(--line);border-radius:10px;padding:10px}
+.empty{color:var(--sub);text-align:center;padding:30px}
+@media (max-width:700px){h1{font-size:26px}.tab{font-size:19px;padding:8px 12px}}
+</style>
+</head>
+<body>
+<div id="gate">
+  <form id="gForm" class="gbox" autocomplete="off">
+    <div style="font-size:54px">🔒</div>
+    <div class="gtitle">PAPS 기록 비교</div>
+    <p class="psub" style="text-align:center">학생 개인정보 보호를 위해 비밀번호가 필요해요</p>
+    <input id="gPw" type="password" placeholder="비밀번호" autocomplete="current-password">
+    <label class="chk" style="justify-content:center;border:0"><input type="checkbox" id="gRemember"> 이 컴퓨터에서 기억하기</label>
+    <button class="tbtn primary" style="width:100%;padding:12px;font-size:18px">열기</button>
+  </form>
+  <p id="gMsg" class="gmsg"></p>
+</div>
+<div class="wrap" style="display:none">
+  <header>
+    <h1>PAPS 기록 비교 <small>1학기 → 2학기, 얼마나 달라졌을까?</small></h1>
+    <div class="spacer"></div>
+    <button class="tbtn" id="syncChip" style="font-weight:700">💻 이 컴퓨터에만 저장</button>
+    <button class="tbtn" id="btnLock">🔒 잠그기</button>
+    <button class="tbtn" id="btnFull">⛶ 전체화면</button>
+    <button class="tbtn" id="btnData">💾 데이터</button>
+  </header>
+
+  <div class="bar">
+    <div class="tabs" id="tabs"></div>
+    <div class="seg" id="mode">
+      <button data-m="view" class="on">📊 비교 보기</button>
+      <button data-m="input">✏️ 2학기 기록 입력</button>
+    </div>
+    <label class="chk"><input type="checkbox" id="hideBmi"> BMI 숨기기</label>
+  </div>
+
+  <div id="banner"></div>
+  <div id="main"></div>
+</div>
+
+<!-- student detail -->
+<div class="modal" id="detail"><div class="mbox" id="detailBox"></div></div>
+<!-- data modal -->
+<div class="modal" id="dataModal"><div class="mbox" style="width:min(760px,100%)" id="dataBox"></div></div>
+
+<script>
+/* ===== 측정 종목 ===== */
+const ITEMS=[
+  {k:'run', area:'심폐지구력', short:'심폐', test:'왕복오래달리기', unit:'회', dir:1,  dec:0, color:'#ef6c3a'},
+  {k:'flex',area:'유연성',     short:'유연', test:'앉아윗몸앞으로굽히기', unit:'cm', dir:1, dec:1, color:'#8b5cf6'},
+  {k:'grip',area:'근력',       short:'근력', test:'악력', unit:'kg', dir:1, dec:1, color:'#0ea5e9'},
+  {k:'dash',area:'순발력',     short:'순발', test:'50m 달리기', unit:'초', dir:-1, dec:2, color:'#f59e0b'},
+  {k:'bmi', area:'비만',       short:'BMI',  test:'BMI', unit:'', dir:0, dec:1, color:'#14b8a6'}
+];
+const BMI_GRADES=['마름','정상','과체중','경도비만','고도비만'];
+
+/* ===== 1학기 기록 (기록, 점수, 등급) × 5종목 ===== */
+/* 1학기 기록은 비밀번호로 암호화되어 아래 ENC 안에만 들어 있어요. (잠금 만들기 도구가 채워 넣어요) */
+const ENC={"salt":"taP87RbtvSFfe0OlNg5sbQ==","iv":"rL4ymX43pzOQph1q","iter":250000,"ct":"bPT9F1+jKrRI6H2C+eOmFVJ7SjXwZg2PjF++hdqlGqVXqDx1Tjj4oZPw09jbeUuMUrt4VBFw69ul29EwdHR09oRGJRg3+2vnG88E0GtvrGN8YWljNXDzMyXrzeYiHOXt1YGz7yK2Mn9wNCjJu/us5hXmiToSMyahuZ422lJz7N4KLla15Yac4MLKw/A0+dqkahGl8iJE6XBS707ZwbE5WRBIymKuTzFewyPyE8h0XUNTGFmo7Olu9XYeXzYAadDC+6CneWU+taGBxhgPHzpLoMnVBrUTc9qmVl632h3z9OeUpX9ji8z+IvOqYRIX1VWsO/Y0lCagJloSGk6WRhV3gUSwOiFp6ofw7ivr2ODNesPhWc9gpIjq/DrxLxqJT2yUv4EyXdx8I51Yei9aukA46lCFFhUai/9P4SV0GukRB+LMt1NDmIEV+dTZdFqCp0a0+Zh5b2b8nQoAqRstSh+Q6oyLM8yPIuo8RCieq/BY6yNGNlly8cdz7yGzOSF6Od8B/H0FxAwcaEW0aeoZBt5xowFcKtglGRMO2w4ckVhUIRay42ATR+v9cTKL08wRbhqDQx8lJUhv6GB/6FpVNATnseDY+LwaFeXx9EaJDfLy0URIaNAL7OvGsr2GwUZLVmraCRpcgmMbHmsuqoVrQsLC0LDP/9d5M2GryLfkZFJPw41pu8KVnrgvNi7javnvu0zM3fPLB1rbviwUKZvrVKz8KP39mNGnlhGs34vk36f4VAdjzlJK/x0c0+Lp9pACVhgg5edMpqxqZxaLJZ2LB1XSN7sEvJuMq+Vwr66lJNXOqlCkOVmeZwxRM09Fgu4lkijDt7LLjwjNfVwCJmWMSRYc2mrSZsrH00JQeVF2ApU8le0YnXYttV43xrUhuatCu0tZcIUydwKlTsmRZLGs8G2Qeyo/VrPeFHAF3/OGJjyF873ByNb8hExlM7fA+ZHBgFd+lFoS3kbiCWFE8cG1iH9hEjMx2kFwPXGTv/D4CxPwVc9IdBovbLcGXW5SpSoW0zYj8w2dMEZiGHtyeKk4zWD9xEYu3UhG+IOhM2iW3EEQ53otrtdJNrO6Mg0SlWG4CsUaeDm/ms0JmEUoni60uqYt6crs3SaNE6/QaSG/+DkM+Qf216SjTY+aEkHJV9LodukFaruZjWkWf7oyrZSeWE1eDjd7oiK+FEzxZXVoKdjNHghF9NsIU0TukQ5edwJdKbRx3WxOlfTM1DLNUMYo8ikPw9zVphfZKOuwIlR2J87qcrCuj072N63lpd22CDxscpQAZgvMw79vhC7T041Q89MJV+7w2/zAMO1VFbmcLFVW0x6HWTWbzaavI/uxJITccqSUGfrvKuuQ+Wzw8JTZV57MNK4gfBODaLIrbg0iSKUmdhrx92sRyncKVtbohRZFAuouRSxCRDN3H+vj2ExYfii96xbEEle+9uq0bBjrwA3JaWY/7eQ7Ifs86WMfXZKMhjxIWTQDfMYBPFcjiFUKxDnTWRsQ/4Hep73XJlUByqRKYsq8D81Ipu1A9Mjdy7rnosjzueyy4UbyvtmPr5u9xI1zinPXrYL+7uTNB/XUJrNLkDotgv3mVVymPtdBxQPNZwMKDOHpDPi3Xj16cCVGcrVL8etUV3TK4+GXpBUAjdk9bkDQahKDIOAvP210xsgPiioICr4kVNFhXVe7qSqgAtmdWCv+fzPyTInztejX64Uyt3q38e47DngPelp2wbNXKqLt9eMn1O2lg0BMu4HW4tqFmBJTwTj6HAsEVMYUOMOWOrCzVkhlqjYSHA=="};
+let RAW=null, SITE_PW='';
+const GRADES=[3,4,5,6];
+function unpack(r){ if(!r) return null; const o={}; ITEMS.forEach((it,i)=>o[it.k]={v:r[i*3],s:r[i*3+1],g:r[i*3+2]}); return o; }
+const S1BASE={};
+
+/* ===== 상태 저장 ===== */
+const KEY='paps-compare-v1';
+let state;
+function emptyRec(){const o={};ITEMS.forEach(it=>o[it.k]={v:null,s:null,g:null});return o;}
+function defaults(){
+  const st={s2:{},names:{},extra:{},hideBmi:false,sample:false,grade:3,mode:'view',item:'run'};
+  GRADES.forEach(g=>{st.extra[g]=0;st.names[g]=[];st.s2[g]=[];});
+  return st;
+}
+function load(){
+  let st=defaults();
+  try{const raw=localStorage.getItem(KEY); if(raw){st=Object.assign(st,JSON.parse(raw));}}catch(e){}
+  normalize(st); return st;
+}
+function normalize(st){
+  GRADES.forEach(g=>{
+    st.extra[g]=st.extra[g]||0; st.names[g]=st.names[g]||[]; st.s2[g]=st.s2[g]||[];
+    const n=S1BASE[g].length+st.extra[g];
+    while(st.s2[g].length<n) st.s2[g].push(emptyRec());
+    st.s2[g].length=n;
+  });
+}
+let saveT;
+function save(){
+  clearTimeout(saveT);
+  saveT=setTimeout(()=>{
+    try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+    const h=document.getElementById('savehint'); if(h){h.classList.add('show');setTimeout(()=>h.classList.remove('show'),1200);}
+  },250);
+}
+
+/* ===== 구글 시트 동기화 =====
+   Apps Script 웹앱 주소를 아래에 넣어 두면, 다른 컴퓨터에서는 비밀번호만 입력하면 돼요. */
+const DEFAULT_SHEET_URL='';
+const SKEY='paps-compare-sync';
+let sync={url:'',key:''};
+try{Object.assign(sync,JSON.parse(localStorage.getItem(SKEY)||'{}'));}catch(e){}
+
+let syncStatus={state:'off',time:null,msg:''};
+const skey=()=>sync.key||SITE_PW;
+const connected=()=>!!(sync.url&&skey()&&!sync.off);
+const dirty=new Set(); let pushT=null;
+function saveSync(){try{localStorage.setItem(SKEY,JSON.stringify(sync));}catch(e){}}
+function setStatus(st,msg){syncStatus.state=st; if(st==='ok')syncStatus.time=new Date(); syncStatus.msg=msg||''; renderSyncChip();}
+function renderSyncChip(){
+  const b=document.getElementById('syncChip'); if(!b) return;
+  const t=syncStatus.time?syncStatus.time.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):'';
+  const map={off:['💻 이 컴퓨터에만 저장','#64748b'],ok:[`☁️ 시트 연결됨${t?' · '+t:''}`,'#16a34a'],busy:['⏳ 시트와 맞추는 중…','#0891b2'],err:['⚠️ 시트 연결 오류','#e11d48']};
+  const [txt,col]=connected()?map[syncStatus.state==='off'?'busy':syncStatus.state]:map.off;
+  b.textContent=txt; b.style.color=col; b.title=syncStatus.msg||'눌러서 시트 연결 설정';
+}
+function hasLocal(){return GRADES.some(g=>state.s2[g].some(r=>ITEMS.some(it=>has(r[it.k])))||state.names[g].some(n=>n));}
+function gradeRows(g){return S1(g).map((_,i)=>({name:state.names[g][i]||'',vals:ITEMS.flatMap(it=>{const r=state.s2[g][i][it.k];return [r.v,r.s,r.g];})}));}
+const num=x=>x===''||x==null||isNaN(Number(x))?null:Number(x);
+function applyRows(rows){
+  GRADES.forEach(g=>{
+    const list=rows.filter(r=>Number(r.grade)===g).sort((a,b)=>a.idx-b.idx);
+    state.extra[g]=Math.max(0,list.length-S1BASE[g].length);
+    state.s2[g]=[]; state.names[g]=[]; normalize(state);
+    list.forEach((r,i)=>{
+      if(i>=state.s2[g].length) return;
+      state.names[g][i]=String(r.name||'').trim();
+      ITEMS.forEach((it,k)=>{
+        const v=r.vals[k*3], s=r.vals[k*3+1], gg=r.vals[k*3+2];
+        state.s2[g][i][it.k]={v:num(v),s:num(s),g:(gg===''||gg==null)?null:(it.k==='bmi'?String(gg).trim():num(gg))};
+      });
+    });
+  });
+}
+async function fetchRows(){
+  const res=await fetch(sync.url+(sync.url.includes('?')?'&':'?')+'key='+encodeURIComponent(skey())+'&t='+Date.now(),{cache:'no-store'});
+  const d=await res.json(); if(!d.ok) throw new Error(d.error||'불러오기 실패');
+  return d.rows||[];
+}
+async function pull(){
+  if(!connected()) return false;
+  setStatus('busy');
+  try{
+    const rows=await fetchRows();
+    if(!rows.length){ // 시트가 비어 있으면 이 컴퓨터 기록을 올려요
+      if(hasLocal()&&!state.sample){ await push(GRADES); return {changed:false}; }
+    }
+    const before=JSON.stringify([state.s2,state.names,state.extra]);
+    applyRows(rows); state.sample=false;
+    const changed=before!==JSON.stringify([state.s2,state.names,state.extra]);
+    try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+    setStatus('ok'); return {changed};
+  }catch(e){ setStatus('err',String(e.message||e)); return false; }
+}
+async function push(grades,keepalive){
+  if(!connected()||state.sample) return false;
+  const body={key:skey(),grades:{}}; grades.forEach(g=>body.grades[g]=gradeRows(g));
+  setStatus('busy');
+  try{
+    const res=await fetch(sync.url,{method:'POST',body:JSON.stringify(body),keepalive:!!keepalive});
+    const d=await res.json(); if(!d.ok) throw new Error(d.error||'저장 실패');
+    setStatus('ok'); return true;
+  }catch(e){ setStatus('err',String(e.message||e)); return false; }
+}
+function markDirty(g){ if(!connected()) return; dirty.add(g); clearTimeout(pushT); pushT=setTimeout(flush,1200); }
+async function flush(){ clearTimeout(pushT); if(!dirty.size) return; const gs=[...dirty]; dirty.clear(); const ok=await push(gs); if(!ok){ gs.forEach(g=>dirty.add(g)); pushT=setTimeout(flush,8000); } }
+window.addEventListener('beforeunload',()=>{ if(dirty.size) push([...dirty],true); });
+// 비교 보기 화면에서는 20초마다 시트의 새 기록을 가져와요 (교실 TV용)
+setInterval(async()=>{
+  if(!state||!connected()||state.mode!=='view'||dirty.size||document.visibilityState!=='visible') return;
+  const r=await pull(); if(r&&r.changed){ render(); if(detailIdx!=null) openDetail(detailIdx); }
+},20000);
+
+/* ===== 도우미 ===== */
+const S1=g=>S1BASE[g].concat(Array(state.extra[g]).fill(null));
+const isTransfer=(g,i)=>!S1(g)[i];
+const nm=(g,i)=>state.names[g][i]||`${i+1}번`;
+const items=()=>ITEMS.filter(it=>!(state.hideBmi&&it.k==='bmi'));
+const has=r=>r&&r.v!=null&&r.v!=='';
+function fmt(v,dec){return v==null||v===''?'–':Number(v).toFixed(dec);}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function judge(it,a,b){
+  if(!has(b)) return {st:'none'};
+  if(!has(a)) return {st:'new'};
+  const d=+(b.v-a.v).toFixed(it.dec);
+  let st;
+  if(it.dir===0){
+    if(a.s!=null&&b.s!=null&&a.s!==''&&b.s!=='') st=b.s>a.s?'up':b.s<a.s?'down':'same';
+    else st=d===0?'same':'neutral';
+  } else st=d*it.dir>0?'up':d*it.dir<0?'down':'same';
+  return {st,d};
+}
+function deltaText(it,j){
+  if(j.st==='none') return '미입력';
+  if(j.st==='new') return '새 기록';
+  if(j.d===0) return '그대로';
+  const arrow=j.st==='up'?'▲ ':j.st==='down'?'▼ ':'';
+  const sign=j.d>0?'+':'−';
+  return arrow+sign+Math.abs(j.d).toFixed(it.dec)+it.unit;
+}
+const COLORS={up:'#16a34a',down:'#e11d48',same:'#64748b',neutral:'#0891b2',new:'#2563eb',none:'#cbd5e1'};
+const gtxt=(it,g)=>g==null||g===''?'–':(it.k==='bmi'?g:`${g}등급`);
+function total(rec){ if(!rec) return null; let t=0; for(const it of ITEMS){const s=rec[it.k].s; if(s==null||s==='') return null; t+=+s;} return t; }
+
+/* ===== 상단 ===== */
+function renderTabs(){
+  document.getElementById('tabs').innerHTML=GRADES.map(g=>
+    `<button class="tab ${state.grade===g?'on':''}" data-g="${g}">${g}학년<span class="n">${S1(g).length}명</span></button>`).join('');
+  document.querySelectorAll('#mode button').forEach(b=>b.classList.toggle('on',b.dataset.m===state.mode));
+  document.getElementById('hideBmi').checked=state.hideBmi;
+  document.getElementById('banner').innerHTML=state.sample?
+    `<div class="banner">🧪 지금은 <b>예시(가짜) 2학기 데이터</b>로 미리보기 중이에요. 실제 측정 기록을 넣기 전에 지워 주세요.
+     <button class="tbtn" id="clearSample">예시 데이터 지우기</button></div>`:'';
+}
+document.getElementById('tabs').onclick=e=>{const b=e.target.closest('.tab'); if(!b)return; state.grade=+b.dataset.g; save(); render();};
+document.getElementById('mode').onclick=async e=>{const b=e.target.closest('button'); if(!b)return; await flush(); state.mode=b.dataset.m; save(); render(); if(connected()){ const r=await pull(); if(r&&r.changed) render(); }};
+document.getElementById('syncChip').onclick=()=>openData();
+document.getElementById('hideBmi').onchange=e=>{state.hideBmi=e.target.checked; if(state.hideBmi&&state.item==='bmi')state.item='run'; save(); render();};
+document.getElementById('banner').onclick=e=>{if(e.target.id==='clearSample'){clearS2();}};
+document.getElementById('btnFull').onclick=()=>{
+  try{ if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); }catch(e){}
+};
+
+/* ===== 비교 보기 ===== */
+function renderView(){
+  const g=state.grade, s1=S1(g), s2=state.s2[g], its=items();
+  const entered=s2.filter(r=>ITEMS.some(it=>has(r[it.k]))).length;
+  let h='';
+
+  // 요약
+  h+=`<div class="panel"><p class="ptitle">${g}학년 한눈에 보기</p>
+      <p class="psub">2학기 기록 입력: <b>${entered}</b> / ${s1.length}명 · 종목을 누르면 아래 그래프가 바뀌어요</p><div class="sumgrid">`;
+  its.forEach(it=>{
+    const c={up:0,same:0,down:0,neutral:0,new:0,none:0};
+    s1.forEach((a,i)=>{c[judge(it,a&&a[it.k],s2[i][it.k]).st]++;});
+    const n=s1.length;
+    const seg=(k)=>c[k]?`<span style="width:${c[k]/n*100}%;background:${COLORS[k]}"></span>`:'';
+    const lbl=it.dir===0?[['up','좋아짐'],['neutral','변화'],['same','그대로'],['down','주의']]:[['up','향상'],['same','유지'],['down','하락']];
+    h+=`<div class="sum ${state.item===it.k?'on':''}" data-item="${it.k}">
+        <div class="area" style="color:${it.color}">${it.area}</div><div class="test">${it.test}${it.unit?` (${it.unit})`:''}</div>
+        <div class="stack">${seg('up')}${seg('neutral')}${seg('same')}${seg('down')}${seg('new')}</div>
+        <div class="counts">${lbl.filter(([k])=>k!=='neutral'||c.neutral).map(([k,t])=>`<span><i class="dot" style="background:${COLORS[k]}"></i>${t} <b>${c[k]}</b></span>`).join('')}
+        ${c.new?`<span><i class="dot" style="background:${COLORS.new}"></i>전입 <b>${c.new}</b></span>`:''}
+        ${c.none?`<span style="color:#94a3b8">미입력 ${c.none}</span>`:''}</div></div>`;
+  });
+  h+=`</div></div>`;
+
+  // 덤벨 차트
+  const it=ITEMS.find(x=>x.k===state.item)||ITEMS[0];
+  h+=`<div class="panel chart"><div class="chips">${its.map(x=>`<button class="chip ${x.k===it.k?'on':''}" data-item="${x.k}">${x.area}</button>`).join('')}</div>
+      <p class="ptitle" style="color:${it.color}">${it.area} · ${it.test}</p>
+      <div class="legend">
+        <span><svg width="18" height="18"><circle cx="9" cy="9" r="7" fill="#334155"/></svg> 1학기</span>
+        <span><svg width="18" height="18"><circle cx="9" cy="9" r="7" fill="${COLORS.up}"/></svg> 2학기 (향상)</span>
+        <span><svg width="18" height="18"><circle cx="9" cy="9" r="7" fill="${COLORS.down}"/></svg> 2학기 (하락)</span>
+        <span><svg width="18" height="18"><circle cx="9" cy="9" r="7" fill="${COLORS.new}"/></svg> 전입생 (2학기만)</span>
+        <span style="margin-left:auto;font-weight:700;color:var(--ink)">${it.dir===0?'BMI는 높낮이보다 ‘정상’ 범위에 있는지가 중요해요':it.dir===-1?'오른쪽일수록 빨라요 (기록 시간이 짧아요) →':'오른쪽일수록 좋은 기록 →'}</span>
+      </div>${dumbbell(g,it)}</div>`;
+
+  // 학생 카드
+  h+=`<div class="panel"><p class="ptitle">학생별 변화</p><p class="psub">카드를 누르면 크게 볼 수 있어요 (← → 키로 넘기기)</p><div class="cards">`;
+  s1.forEach((a,i)=>{
+    const b=s2[i]; const tr=!a;
+    let up=0,down=0;
+    const rows=its.map(x=>{
+      const ra=a&&a[x.k], rb=b[x.k], j=judge(x,ra,rb);
+      if(j.st==='up')up++; if(j.st==='down')down++;
+      return `<div class="mrow"><span class="ia">${x.short}</span>
+        <span class="vals">${tr?'':`<span class="a">${fmt(ra.v,x.dec)}</span> → `}<b>${fmt(rb.v,x.dec)}</b>${x.unit}</span>
+        <span class="pill st-${j.st}">${deltaText(x,j)}</span></div>`;
+    }).join('');
+    const t1=total(a), t2=total(b);
+    const tot=(t2!=null)?`총점 <b>${t1!=null?t1+' → ':''}${t2}</b>`:(t1!=null?`1학기 총점 <b>${t1}</b>`:'');
+    h+=`<div class="card" data-i="${i}"><div class="chead"><span class="cname">${esc(nm(g,i))}</span>${tr?'<span class="tag">전입생</span>':''}
+        <span class="ctot">${tot}${(up||down)?`<br><span style="color:var(--up)">▲${up}</span> <span style="color:var(--down)">▼${down}</span>`:''}</span></div>${rows}</div>`;
+  });
+  h+=`</div></div>`;
+  return h;
+}
+
+function dumbbell(g,it){
+  const s1=S1(g), s2=state.s2[g];
+  const rows=s1.map((a,i)=>({i,a:a?a[it.k]:null,b:s2[i][it.k]}));
+  const vals=[]; rows.forEach(r=>{if(has(r.a))vals.push(+r.a.v); if(has(r.b))vals.push(+r.b.v);});
+  if(!vals.length) return '<div class="empty">기록이 없어요</div>';
+  let mn=Math.min(...vals), mx=Math.max(...vals);
+  if(mn===mx){mn-=1;mx+=1;} const pad=(mx-mn)*.08; mn-=pad; mx+=pad;
+  const W=1000,L=120,R=850,rowH=64,top=40,H=top+rows.length*rowH+8;
+  const rev=it.dir===-1;
+  const x=v=>{let t=(v-mn)/(mx-mn); if(rev)t=1-t; return L+t*(R-L);};
+  let s=`<svg class="db" viewBox="0 0 ${W} ${H}" font-family="Noto Sans KR" role="img" aria-label="${it.area} 1학기 2학기 비교">`;
+  // 눈금
+  for(let k=0;k<=5;k++){
+    const v=mn+(mx-mn)*k/5, xx=x(v);
+    s+=`<line x1="${xx}" y1="${top-6}" x2="${xx}" y2="${H-6}" stroke="#e2e8f0"/>`;
+    s+=`<text x="${xx}" y="${top-14}" text-anchor="middle" font-size="15" fill="#64748b">${v.toFixed(it.dec>1?1:it.dec)}</text>`;
+  }
+  rows.forEach((r,idx)=>{
+    const y=top+idx*rowH+rowH/2;
+    if(idx%2===0) s+=`<rect x="0" y="${y-rowH/2}" width="${W}" height="${rowH}" fill="#f8fafc" rx="8"/>`;
+    s+=`<text x="12" y="${y+7}" font-size="20" font-weight="700" fill="#1e293b">${esc(nm(g,r.i))}</text>`;
+    const j=judge(it,r.a,r.b), col=COLORS[j.st];
+    if(has(r.a)&&has(r.b)){
+      const xa=x(+r.a.v), xb=x(+r.b.v);
+      if(Math.abs(xb-xa)>14){
+        const dirx=xb>xa?1:-1;
+        s+=`<line x1="${xa}" y1="${y}" x2="${xb-dirx*15}" y2="${y}" stroke="${col}" stroke-width="7" stroke-linecap="round" opacity=".8"/>`;
+        s+=`<path d="M${xb-dirx*15} ${y-9} L${xb-dirx*3} ${y} L${xb-dirx*15} ${y+9}Z" fill="${col}" opacity=".8"/>`;
+      }
+      s+=`<circle cx="${xa}" cy="${y}" r="12" fill="#334155" stroke="#fff" stroke-width="3"/>`;
+      s+=`<circle cx="${xb}" cy="${y}" r="14" fill="${col}" stroke="#fff" stroke-width="3"/>`;
+      const close=Math.abs(xb-xa)<46;
+      s+=`<text x="${xa}" y="${y-18}" text-anchor="middle" font-size="16" font-weight="700" fill="#334155">${fmt(r.a.v,it.dec)}</text>`;
+      s+=`<text x="${xb}" y="${close?y+33:y-18}" text-anchor="middle" font-size="17" font-weight="900" fill="${col}">${fmt(r.b.v,it.dec)}</text>`;
+    } else if(has(r.a)){
+      const xa=x(+r.a.v);
+      s+=`<circle cx="${xa}" cy="${y}" r="12" fill="#334155" stroke="#fff" stroke-width="3"/>`;
+      s+=`<text x="${xa}" y="${y-18}" text-anchor="middle" font-size="16" font-weight="700" fill="#334155">${fmt(r.a.v,it.dec)}</text>`;
+    } else if(has(r.b)){
+      const xb=x(+r.b.v);
+      s+=`<circle cx="${xb}" cy="${y}" r="14" fill="${COLORS.new}" stroke="#fff" stroke-width="3"/>`;
+      s+=`<text x="${xb}" y="${y-18}" text-anchor="middle" font-size="17" font-weight="900" fill="${COLORS.new}">${fmt(r.b.v,it.dec)}</text>`;
+    } else if(!S1(g)[r.i]){
+      s+=`<text x="${L}" y="${y+6}" font-size="15" fill="#94a3b8">전입생 · 2학기 기록을 입력하면 나타나요</text>`;
+    }
+    const lab=j.st==='new'?'전입 · 첫 기록':j.st==='none'?(S1(g)[r.i]?'2학기 미입력':''):deltaText(it,j);
+    s+=`<text x="${W-12}" y="${y+7}" text-anchor="end" font-size="${j.st==='none'||j.st==='new'?15:19}" font-weight="${j.st==='none'?400:900}" fill="${j.st==='none'?'#94a3b8':col}">${lab}</text>`;
+  });
+  return s+'</svg>';
+}
+
+/* ===== 학생 상세 (크게 보기) ===== */
+let detailIdx=null;
+function openDetail(i){
+  const g=state.grade, a=S1(g)[i], b=state.s2[g][i], tr=!a;
+  detailIdx=i;
+  const t1=total(a), t2=total(b);
+  let h=`<div class="mhead"><span class="cname" style="font-family:Jua">${esc(nm(g,i))}</span>
+     ${tr?'<span class="tag">전입생 · 1학기 기록 없음</span>':''}
+     <span style="color:var(--sub);font-size:16px">${g}학년</span>
+     <span class="spacer"></span>
+     ${t1!=null||t2!=null?`<span style="font-size:18px">총점 <b style="font-size:26px">${t1!=null?t1:'–'} → ${t2!=null?t2:'–'}</b>${t1!=null&&t2!=null?` <span class="pill st-${t2>t1?'up':t2<t1?'down':'same'}">${t2>=t1?'+':'−'}${Math.abs(t2-t1)}점</span>`:''}</span>`:''}
+     <button class="tbtn" data-nav="-1">◀</button><button class="tbtn" data-nav="1">▶</button><button class="tbtn primary" data-close>닫기</button></div><div class="dgrid">`;
+  items().forEach(it=>{
+    const ra=a&&a[it.k], rb=b[it.k], j=judge(it,ra,rb);
+    // 학년 전체 범위로 막대 길이 맞추기
+    const all=[]; S1(g).forEach((x,k)=>{if(x&&has(x[it.k]))all.push(+x[it.k].v); if(has(state.s2[g][k][it.k]))all.push(+state.s2[g][k][it.k].v);});
+    const lo=Math.min(0,...all), hi=Math.max(...all)*1.08||1;
+    const w=v=>Math.max(3,(v-lo)/(hi-lo)*100);
+    const bar=(r,col,lbl)=>{
+      if(!has(r)) return `<div class="brow"><span>${lbl}</span><div class="btrack"><span class="bval" style="left:10px;color:#94a3b8;font-weight:400">${lbl==='1학기'?'기록 없음':'미입력'}</span></div></div>`;
+      const pct=w(+r.v), inside=pct>28;
+      return `<div class="brow"><span>${lbl}</span><div class="btrack"><div class="bfill" style="width:${pct}%;background:${col}">${inside?fmt(r.v,it.dec)+it.unit:''}</div>${inside?'':`<span class="bval" style="left:calc(${pct}% + 8px)">${fmt(r.v,it.dec)}${it.unit}</span>`}</div></div>`;
+    };
+    const ga=ra&&ra.g, gb=rb&&rb.g;
+    h+=`<div class="ditem"><div class="t"><span class="area" style="color:${it.color}">${it.area}</span><span class="test">${it.test}</span>
+        <span class="pill st-${j.st}">${deltaText(it,j)}</span></div>
+        ${bar(ra,'#334155','1학기')}${bar(rb,j.st==='none'?'#cbd5e1':COLORS[j.st],'2학기')}
+        <div class="gchg">등급 <b>${gtxt(it,ga)}</b> → <b>${gtxt(it,gb)}</b>${ra&&ra.s!=null?` · 점수 <b>${ra.s}</b> → <b>${rb.s!=null&&rb.s!==''?rb.s:'–'}</b>`:(rb.s!=null&&rb.s!==''?` · 점수 <b>${rb.s}</b>`:'')}</div>
+        ${it.k==='dash'?'<div class="note">50m 달리기는 시간이 짧을수록 좋은 기록이에요</div>':''}
+        ${it.k==='bmi'?'<div class="note">BMI는 ‘정상’ 범위를 유지하는 것이 목표예요</div>':''}</div>`;
+  });
+  h+='</div>';
+  document.getElementById('detailBox').innerHTML=h;
+  document.getElementById('detail').classList.add('on');
+}
+function closeDetail(){document.getElementById('detail').classList.remove('on');detailIdx=null;}
+document.getElementById('detail').onclick=e=>{
+  if(e.target.id==='detail'||e.target.hasAttribute('data-close')) return closeDetail();
+  const n=e.target.closest('[data-nav]'); if(n) navDetail(+n.dataset.nav);
+};
+function navDetail(d){const n=S1(state.grade).length; openDetail((detailIdx+d+n)%n);}
+document.addEventListener('keydown',e=>{
+  if(detailIdx==null) return;
+  if(e.key==='Escape') closeDetail();
+  if(e.key==='ArrowRight') navDetail(1);
+  if(e.key==='ArrowLeft') navDetail(-1);
+});
+
+/* ===== 2학기 입력 ===== */
+function renderInput(){
+  const g=state.grade, s1=S1(g), s2=state.s2[g];
+  let h=`<div class="panel"><p class="ptitle">${g}학년 2학기 기록 입력 <span class="savehint" id="savehint">✓ 자동 저장됨</span></p>
+     <p class="psub">${connected()?'<b style="color:var(--up)">☁️ 구글 시트에 자동 저장돼요.</b> ':''}기록만 넣어도 그래프가 그려져요. 점수·등급까지 넣으면 등급 변화와 총점 비교도 볼 수 있어요. 회색 줄은 1학기 기록이에요. 이름 칸에 학생 이름을 넣어도 돼요(이 컴퓨터에만 저장).</p>
+     <div class="tablewrap"><table class="inp"><thead><tr><th rowspan="2" style="min-width:110px">학생</th>`;
+  ITEMS.forEach(it=>h+=`<th colspan="3" class="it" style="color:${it.color}">${it.area}<div style="font-family:'Noto Sans KR';font-size:12px;color:var(--sub)">${it.test}${it.unit?` (${it.unit})`:''}</div></th>`);
+  h+=`</tr><tr>${ITEMS.map(()=>'<th>기록</th><th>점수</th><th>등급</th>').join('')}</tr></thead><tbody>`;
+  s1.forEach((a,i)=>{
+    const added=i>=S1BASE[g].length;
+    h+=`<tr><td><input class="nm" data-name="${i}" value="${esc(state.names[g][i]||'')}" placeholder="${i+1}번"></td>`;
+    ITEMS.forEach(it=>{
+      const r=s2[i][it.k];
+      h+=`<td><input type="number" step="any" inputmode="decimal" data-i="${i}" data-k="${it.k}" data-f="v" value="${r.v??''}"></td>`;
+      h+=`<td><input type="number" step="1" inputmode="numeric" data-i="${i}" data-k="${it.k}" data-f="s" value="${r.s??''}" style="min-width:44px"></td>`;
+      if(it.k==='bmi') h+=`<td><select data-i="${i}" data-k="bmi" data-f="g" style="min-width:86px"><option value=""></option>${BMI_GRADES.map(o=>`<option ${r.g===o?'selected':''}>${o}</option>`).join('')}</select></td>`;
+      else h+=`<td><select data-i="${i}" data-k="${it.k}" data-f="g" style="min-width:44px"><option value=""></option>${[1,2,3,4,5].map(o=>`<option value="${o}" ${+r.g===o?'selected':''}>${o}</option>`).join('')}</select></td>`;
+    });
+    h+=`</tr><tr class="prev"><td>${a?'1학기':(added?`<button class="rm" data-rm="${i}">전입생 삭제</button>`:'')}</td>`;
+    ITEMS.forEach((it,k)=>{
+      if(!a){ if(k===0) h+=`<td colspan="15" style="text-align:left;padding-left:10px">전입생 · 1학기 기록 없음 (2학기 기록만 표시돼요)</td>`; return; }
+      const r=a[it.k]; h+=`<td>${fmt(r.v,it.dec)}</td><td>${r.s}</td><td>${r.g}</td>`;
+    });
+    h+='</tr>';
+  });
+  h+=`</tbody></table></div><div style="margin-top:12px"><button class="tbtn" id="addStu">＋ 전입생 추가</button></div></div>`;
+  return h;
+}
+const main=document.getElementById('main');
+main.addEventListener('input',e=>{
+  const t=e.target, g=state.grade;
+  if(t.dataset.name!=null){ state.names[g][+t.dataset.name]=t.value.trim(); save(); markDirty(g); return; }
+  if(t.dataset.k){
+    const r=state.s2[g][+t.dataset.i][t.dataset.k], f=t.dataset.f;
+    if(f==='g') r.g = t.value===''?null:(t.dataset.k==='bmi'?t.value:+t.value);
+    else r[f] = t.value===''?null:+t.value;
+    save(); markDirty(g);
+  }
+});
+main.addEventListener('click',e=>{
+  const sum=e.target.closest('[data-item]'); if(sum){ state.item=sum.dataset.item; save(); render(); return; }
+  const card=e.target.closest('.card'); if(card){ openDetail(+card.dataset.i); return; }
+  if(e.target.id==='addStu'){ const g=state.grade; state.extra[g]++; normalize(state); save(); markDirty(g); render(); return; }
+  const rm=e.target.closest('[data-rm]'); if(rm){
+    const g=state.grade, i=+rm.dataset.rm; state.s2[g].splice(i,1); state.names[g].splice(i,1); state.extra[g]--; normalize(state); save(); markDirty(g); render();
+  }
+});
+
+/* ===== 데이터 관리 ===== */
+function openData(){
+  document.getElementById('dataBox').innerHTML=`
+   <div class="mhead"><span class="ptitle" style="margin:0">💾 데이터 관리</span><span class="spacer"></span><button class="tbtn primary" data-close>닫기</button></div>
+   <div class="syncbox">
+     <div style="font-family:Jua;font-size:22px">☁️ 구글 시트 연결</div>
+     <p class="psub" style="margin:4px 0 10px">연결하면 어느 컴퓨터에서 입력해도 연결된 모든 컴퓨터에 반영돼요. 비교 보기 화면은 20초마다 새 기록을 가져와요.</p>
+     <label class="fld">Apps Script 웹앱 주소<input id="sUrl" value="${esc(sync.url)}" placeholder="https://script.google.com/macros/s/……/exec"></label>
+     <label class="fld">시트 비밀번호 <span style="font-weight:400">(Code.gs의 SECRET 값 · 사이트 비밀번호와 같으면 비워 두세요)</span><input id="sKey" type="password" value="${esc(sync.key)}" autocomplete="off" placeholder="비워 두면 사이트 비밀번호를 사용해요"></label>
+     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
+       <button class="tbtn primary" id="sConnect">${connected()?'다시 연결 / 지금 맞추기':'연결하기'}</button>
+       ${connected()?'<button class="tbtn" id="sOff">이 컴퓨터 연결 끊기</button>':''}
+       <span id="sMsg" style="font-size:14px;font-weight:700"></span>
+     </div>
+   </div>
+   <p class="psub" style="margin-top:18px">${connected()?'시트에 연결되어 있어서 기록이 자동으로 시트에 저장돼요. 아래 백업은 만일을 위한 것이에요.':'지금은 기록이 <b>이 브라우저에만</b> 저장돼요. 시트를 연결하지 않을 때는 백업 내용을 복사해 다른 컴퓨터에서 불러올 수 있어요.'}</p>
+   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+     <button class="tbtn" id="dCopy">📋 백업 내용 복사</button>
+     <button class="tbtn" id="dLoad">📥 아래 내용으로 불러오기</button>
+     <button class="tbtn" id="dSample">🧪 예시 데이터로 미리보기</button>
+     <button class="tbtn" id="dClear" style="color:var(--down)">🗑 2학기 기록 모두 지우기</button>
+   </div>
+   <textarea id="dText">${esc(JSON.stringify({s2:state.s2,names:state.names,extra:state.extra}))}</textarea>
+   <p class="psub" id="dMsg" style="margin-top:8px"></p>`;
+  document.getElementById('dataModal').classList.add('on');
+}
+document.getElementById('btnData').onclick=openData;
+document.getElementById('dataModal').onclick=async e=>{
+  const msg=t=>{const m=document.getElementById('dMsg'); if(m)m.textContent=t;};
+  if(e.target.id==='dataModal'||e.target.hasAttribute('data-close')) return document.getElementById('dataModal').classList.remove('on');
+  if(e.target.id==='dCopy'){
+    const ta=document.getElementById('dText');
+    try{ await navigator.clipboard.writeText(ta.value); msg('✓ 복사했어요. 메모장이나 메일에 붙여 넣어 보관하세요.'); }
+    catch(err){ ta.select(); msg('자동 복사가 막혀 있어요. 위 내용이 선택되었으니 Ctrl+C로 복사하세요.'); }
+  }
+  if(e.target.id==='dLoad'){
+    try{ const d=JSON.parse(document.getElementById('dText').value);
+      if(!d.s2) throw 0; state.s2=d.s2; state.names=d.names||state.names; state.extra=d.extra||state.extra; state.sample=false;
+      normalize(state); save(); render(); if(connected()) push(GRADES); msg('✓ 불러왔어요.');
+    }catch(err){ msg('불러오기에 실패했어요. 복사한 백업 내용을 그대로 붙여 넣었는지 확인해 주세요.'); }
+  }
+  if(e.target.id==='sConnect'){
+    const sm=t=>{const m=document.getElementById('sMsg'); if(m)m.textContent=t;};
+    const url=document.getElementById('sUrl').value.trim(), key=document.getElementById('sKey').value.trim();
+    if(!/^https:\/\/script\.google(usercontent)?\.com\//.test(url)){ sm('⚠️ Apps Script 웹앱 주소(https://script.google.com/…/exec)를 넣어 주세요'); return; }
+    sync.url=url; sync.key=key; sync.off=false; saveSync();
+    if(state.sample){ GRADES.forEach(g=>{state.s2[g]=[];}); state.sample=false; normalize(state); }
+    sm('⏳ 연결하는 중…');
+    const r=await pull(); render();
+    if(r){ sm('✓ 연결됐어요! 이제 이 컴퓨터의 입력이 시트에 저장돼요.'); }
+    else { sm('⚠️ 연결 실패: '+(syncStatus.msg||'주소와 비밀번호, 배포 설정(액세스: 모든 사용자)을 확인해 주세요')); }
+    return;
+  }
+  if(e.target.id==='sOff'){ sync.off=true; saveSync(); setStatus('off'); render(); openData(); return; }
+  if(e.target.id==='dSample'){ if(connected()){ msg('시트에 연결된 동안에는 예시 데이터를 쓸 수 없어요 (가짜 기록이 시트에 올라가지 않도록).'); return; } fillSample(); document.getElementById('dataModal').classList.remove('on'); }
+  if(e.target.id==='dClear'){
+    if(e.target.dataset.sure){ clearS2(); document.getElementById('dataModal').classList.remove('on'); }
+    else { e.target.dataset.sure=1; e.target.textContent='정말 지울까요? 한 번 더 누르세요'; }
+  }
+};
+function clearS2(){ const wasSample=state.sample; GRADES.forEach(g=>{state.s2[g]=[];}); state.sample=false; normalize(state); save(); render(); if(connected()&&!wasSample) push(GRADES); }
+function fillSample(){
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+  GRADES.forEach(g=>{
+    S1(g).forEach((a,i)=>{
+      const r=state.s2[g][i];
+      const base=a||S1BASE[g][0];
+      const ch={run:[-6,16],flex:[-2.5,3.5],grip:[-1,3],dash:[-0.25,0.5],bmi:[-0.6,0.8]};
+      ITEMS.forEach(it=>{
+        const b=base[it.k]; let v;
+        if(it.k==='dash') v=+(b.v-rnd(...ch.dash)).toFixed(2);
+        else v=+(b.v+rnd(...ch[it.k])).toFixed(it.dec);
+        if(it.k==='run') v=Math.max(5,Math.round(v));
+        let s=b.s;
+        if(it.dir!==0){ const better=(v-b.v)*it.dir>0; s=Math.max(0,Math.min(20,b.s+(better?Math.ceil(Math.random()*2):-Math.ceil(Math.random()*2)))); }
+        r[it.k]={v,s,g:b.g};
+      });
+    });
+  });
+  state.sample=true; save(); render();
+}
+
+/* ===== 렌더 ===== */
+function render(){
+  renderTabs();
+  main.innerHTML= state.mode==='view'?renderView():renderInput();
+}
+/* ===== 비밀번호 잠금 ===== */
+const PWKEY='paps-compare-pw';
+const b64d=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
+async function decryptPayload(pw){
+  const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+  const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64d(ENC.salt),iterations:ENC.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+  const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(ENC.iv)},key,b64d(ENC.ct));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+function start(payload,pw){
+  RAW=payload.raw; SITE_PW=pw;
+  GRADES.forEach(g=>S1BASE[g]=RAW[g].map(unpack));
+  if(!sync.url) sync.url=payload.url||DEFAULT_SHEET_URL;
+  state=load();
+  document.getElementById('gate').remove();
+  document.querySelector('.wrap').style.display='';
+  render(); renderSyncChip();
+  if(connected()) pull().then(r=>{ if(r) render(); });
+}
+async function tryUnlock(pw,remember){
+  const payload=await decryptPayload(pw); // 비밀번호가 틀리면 여기서 오류
+  try{ (remember?localStorage:sessionStorage).setItem(PWKEY,pw); }catch(e){}
+  start(payload,pw);
+}
+document.getElementById('btnLock').onclick=()=>{
+  try{ localStorage.removeItem(PWKEY); sessionStorage.removeItem(PWKEY); if(connected()) localStorage.removeItem(KEY); }catch(e){}
+  location.reload();
+};
+(async()=>{
+  const msg=document.getElementById('gMsg');
+  if(!ENC){ msg.innerHTML='아직 잠금 파일이 만들어지지 않았어요.<br><b>make-locked-site.html</b>로 비밀번호를 정해 잠긴 index.html을 만들어 올려 주세요.'; document.getElementById('gForm').style.display='none'; return; }
+  let saved=''; try{ saved=sessionStorage.getItem(PWKEY)||localStorage.getItem(PWKEY)||''; }catch(e){}
+  if(saved){ try{ await tryUnlock(saved,!!localStorage.getItem(PWKEY)); return; }catch(e){} }
+  document.getElementById('gPw').focus();
+  document.getElementById('gForm').onsubmit=async e=>{
+    e.preventDefault();
+    msg.textContent='확인하는 중…';
+    try{ await tryUnlock(document.getElementById('gPw').value,document.getElementById('gRemember').checked); }
+    catch(err){ msg.textContent='비밀번호가 틀렸어요. 다시 입력해 주세요.'; document.getElementById('gPw').select(); }
+  };
+})();
+</script>
+</body>
+</html>
